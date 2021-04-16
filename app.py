@@ -44,7 +44,7 @@ def predict():
         final = list(df.T.to_dict().values())
 
         vectorizer = DictVectorizer(sparse=True)
-        final = vectorizer.fit_transform(final)
+        final = vectorizer.transform(final)
         print(final)
         prediction = model.predict_proba(final)
 
