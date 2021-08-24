@@ -1,8 +1,10 @@
 from flask import Flask, request, url_for, redirect, render_template
 import pickle
 import pandas as pd
+import sklearn
 from sklearn.feature_extraction import DictVectorizer
 import numpy as np
+import logging
 
 app = Flask(__name__)
 
@@ -13,10 +15,15 @@ model = pickle.load(open('model.pkl', 'rb'))
 def hello_world():
     return render_template("index.html")
 
+@app.route('/predict',methods=['GET'])
+def home():
+    return render_template("predict.html")
 
-@app.route('/predict', methods=['POST', 'GET'])
+
+@app.route('/predict', methods=['POST'])
+# def home():
+#    return render_template("predict.html")
 def predict():
-    if request.method == 'POST':
         # for(j=0;j<)
         # int_features = [int(x) for x in request.form.values()]
         hour = request.form['hour']
@@ -37,25 +44,24 @@ def predict():
 
         int_features = [hour, C1, banner_pos, site_category, app_category, device_type, device_conn_type, C14,
                         C15, C16, C17, C18, C19, C20, C21]
-        int_features = np.array([int_features])
-        print(int_features)
+
+        final_features = [np.array(int_features)]
         index_values = ['hour', 'C1', 'banner_pos','site_category', 'app_category', 'device_type', 'device_conn_type','C14','C15', 'C16', 'C17', 'C18', 'C19', 'C20', 'C21']
-        df = pd.DataFrame(data= int_features, columns= index_values)
+        df = pd.DataFrame([int_features], columns=  ['hour', 'C1', 'banner_pos','site_category', 'app_category', 'device_type', 'device_conn_type','C14','C15', 'C16', 'C17', 'C18', 'C19', 'C20', 'C21'])
         final = list(df.T.to_dict().values())
-
         vectorizer = DictVectorizer(sparse=True)
-        final = vectorizer.transform(final)
-        print(final)
-        prediction = model.predict_proba(final)
-
-        print(int_features)
-
-        prediction *= 100
-        return render_template("predict.html", prediction=prediction)
-        return render_template("predict.html")
-    return render_template("predict.html")
+        final1 = vectorizer.fit_transform(final)
+        prediction = model.predict(final1)
+        #
+        # prediction *= 100
+        # prediction = model.predict(final_features)
+        # return prediction
+        return render_template("predict.html", prediction_text='Click Output $ {}'.format(prediction))
 
 
+
+
+# .values()
 # @app.route('/checker',methods=['POST','GET'])
 # def checker():
 #     if request.method == 'POST':
