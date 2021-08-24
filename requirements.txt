@@ -1,6 +1,6 @@
-Flask
+Flask==2.0.1
 pickle
 pandas
 sklearn
 joblib
-gunicorn
+gunicorn==19.9.0
