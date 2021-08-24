@@ -1,10 +1,7 @@
 from flask import Flask, request,render_template
 import pickle
 import pandas as pd
-import sklearn
 from sklearn.feature_extraction import DictVectorizer
-import numpy as np
-import logging
 import joblib
 app = Flask(__name__)
 
