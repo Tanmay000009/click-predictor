@@ -1,4 +1,4 @@
-from flask import Flask, request, url_for, redirect, render_template
+from flask import Flask, request,render_template
 import pickle
 import pandas as pd
 import sklearn
@@ -45,40 +45,14 @@ def predict():
 
         int_features = [hour, C1, banner_pos, site_category, app_category, device_type, device_conn_type, C14,
                         C15, C16, C17, C18, C19, C20, C21]
-
-        final_features = [np.array(int_features)]
-        index_values = ['hour', 'C1', 'banner_pos','site_category', 'app_category', 'device_type', 'device_conn_type','C14','C15', 'C16', 'C17', 'C18', 'C19', 'C20', 'C21']
         df = pd.DataFrame([int_features], columns=  ['hour', 'C1', 'banner_pos','site_category', 'app_category', 'device_type', 'device_conn_type','C14','C15', 'C16', 'C17', 'C18', 'C19', 'C20', 'C21'])
         final = list(df.T.to_dict().values())
         final = vectorizer.transform(final)
-        prediction = model.predict(final)
-        #
-        # prediction *= 100
-        # prediction = model.predict(final_features)
-        # return prediction
-        return render_template("predict.html", prediction_text='Click Output ${}'.format(prediction))
-
-
-
-
-# .values()
-# @app.route('/checker',methods=['POST','GET'])
-# def checker():
-#     if request.method == 'POST':
-#         Expected_Answer = request.form['Expected_Answer']
-#         Students_Answer = request.form['Students_Answer']
-#         print(Expected_Answer)
-#         print(Students_Answer)
-#         match = [Expected_Answer,Students_Answer]
-#         vectorizer.bert(match)
-#         vectors_bert = vectorizer.vectors
-#
-#         dist_1 = spatial.distance.cosine(vectors_bert[0], vectors_bert[1])
-#         score = (1 - dist_1) * 100
-#         print((1 - dist_1) * 100)
-#         print('dist_1: {0}'.format(dist_1))
-#         return render_template("checker.html",Students_Answer=Students_Answer,Expected_Answer=Expected_Answer,score=score)
-#     return  render_template("checker.html")
+        prediction1 = model.predict_proba(final)
+        prediction1 *= 100
+        prediction1 = prediction1[0][1]
+        prediction1 = round(prediction1,3)
+        return render_template("predict.html", prediction_text='Probablity of clicking the add is {} %'.format(prediction1))
 
 if __name__ == '__main__':
     app.run()
