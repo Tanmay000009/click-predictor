@@ -6,3 +6,5 @@ A higher CTR represents more interest in that specific campaign, whereas a lower
 
 ## colab-notebook
   https://colab.research.google.com/drive/1v1qtttalgEtg5DgsurOAQe4CnBO3THcw?usp=sharing
+
+## To Create a copy of given notebook
