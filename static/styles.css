@@ -10343,3 +10343,11 @@ body {
 .footer {
   padding: 5rem 0;
 }
+
+.div-center {
+  margin: auto;
+}
+
+.github-icon {
+  margin-bottom: 5rem;
+}
