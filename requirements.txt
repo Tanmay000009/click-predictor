@@ -3,3 +3,4 @@ pickle
 pandas
 sklearn
 joblib
+gunicorn
