@@ -5,10 +5,11 @@ import sklearn
 from sklearn.feature_extraction import DictVectorizer
 import numpy as np
 import logging
-
+import joblib
 app = Flask(__name__)
 
 model = pickle.load(open('model.pkl', 'rb'))
+vectorizer = joblib.load(open('vectorizer.pkl','rb'))
 
 
 @app.route('/')
@@ -49,14 +50,13 @@ def predict():
         index_values = ['hour', 'C1', 'banner_pos','site_category', 'app_category', 'device_type', 'device_conn_type','C14','C15', 'C16', 'C17', 'C18', 'C19', 'C20', 'C21']
         df = pd.DataFrame([int_features], columns=  ['hour', 'C1', 'banner_pos','site_category', 'app_category', 'device_type', 'device_conn_type','C14','C15', 'C16', 'C17', 'C18', 'C19', 'C20', 'C21'])
         final = list(df.T.to_dict().values())
-        vectorizer = DictVectorizer(sparse=True)
-        final1 = vectorizer.fit_transform(final)
-        prediction = model.predict(final1)
+        final = vectorizer.transform(final)
+        prediction = model.predict(final)
         #
         # prediction *= 100
         # prediction = model.predict(final_features)
         # return prediction
-        return render_template("predict.html", prediction_text='Click Output $ {}'.format(prediction))
+        return render_template("predict.html", prediction_text='Click Output ${}'.format(prediction))
 
 
 
